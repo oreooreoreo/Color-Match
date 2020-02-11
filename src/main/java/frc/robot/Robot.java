@@ -15,7 +15,6 @@
 package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
@@ -24,7 +23,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import jdk.jfr.Percentage;
+import edu.wpi.first.wpilibj.Timer;
 
 
 
@@ -56,11 +55,12 @@ public class Robot extends TimedRobot {
   private double b;
   private double c;
   private double d;
+  int i;
   @Override
   public void robotInit() {
   
   
-
+                                                                                  
   m_colorMatcher.addColorMatch(kBlueTarget);
   m_colorMatcher.addColorMatch(kGreenTarget);
   m_colorMatcher.addColorMatch(kRedTarget);
@@ -70,8 +70,7 @@ public class Robot extends TimedRobot {
 
 @Override
     public void robotPeriodic() {
-
-    
+     
 }
        
 
@@ -101,6 +100,7 @@ public class Robot extends TimedRobot {
     b = 0;
     c = 0;
     d = 0;
+    i = 0;
   }
 
   @Override
@@ -111,6 +111,10 @@ public class Robot extends TimedRobot {
    
     String colorString;
     ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);   
+    
+    if(joy.getRawButtonPressed(6)){i++;
+    }if(i==1){spinMotor.set(ControlMode.PercentOutput, 0.3);Timer.delay(10);i=i-1;}
+    else if (i==0){spinMotor.set(ControlMode.PercentOutput, 0);}
 
     if (match.color == kBlueTarget){
       colorString = "Blue";
@@ -125,7 +129,7 @@ public class Robot extends TimedRobot {
     }
 
   
-  if (joy.getRawButtonPressed(2)){
+  if (joy.getRawButtonPressed(1)){
       a++;}
   if (a==1) {spinMotor.set(ControlMode.PercentOutput, 0.5);
     if (match.color == kGreenTarget){
@@ -133,8 +137,8 @@ public class Robot extends TimedRobot {
     a=a-1;
   }}
   
-if (joy.getRawButtonPressed(3)){
-    b++;}
+if (joy.getRawButtonPressed(2)){
+   b++;}
 if (b==1) {spinMotor.set(ControlMode.PercentOutput, 0.5);
   if (match.color == kRedTarget){
     spinMotor.set(ControlMode.PercentOutput, 0);
@@ -143,7 +147,7 @@ if (b==1) {spinMotor.set(ControlMode.PercentOutput, 0.5);
 }}
 
   
-if (joy.getRawButtonPressed(1)){
+if (joy.getRawButtonPressed(3)){
   c++;}
 if (c==1) {spinMotor.set(ControlMode.PercentOutput, 0.5);
 if (match.color == kBlueTarget){
@@ -169,6 +173,7 @@ if (match.color == kYellowTarget){
     SmartDashBoard.putNumber("b", b);
     SmartDashBoard.putNumber("c", c);
     SmartDashBoard.putNumber("d", d);
+    SmartDashBoard.putNumber("i", i);
     SmartDashboard.putString("Deceted Color", colorString);
 
 }
